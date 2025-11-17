@@ -68,7 +68,7 @@ def create_post(
     db.refresh(new_post)
     return new_post
 
-
+# LIKE "dfsd"
 @router.get("/search", dependencies=[Depends(RateLimiter(times=20, seconds=5))])
 async def search_posts(query: str, db: Session = Depends(get_db)):
     sql_query = """

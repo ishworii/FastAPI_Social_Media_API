@@ -22,9 +22,13 @@ load_dotenv(".env")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    # Create database tables
+    Base.metadata.create_all(bind=engine)
+    print("Database tables created")
+
     redis_url= os.getenv("REDIS_URL")
-    redis_client = Redis.from_url(redis_url if redis_url else "") 
-    
+    redis_client = Redis.from_url(redis_url if redis_url else "")
+
     try:
         await redis_client.ping()
         app.state.redis_client = redis_client
@@ -44,8 +48,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-Base.metadata.create_all(bind=engine)
 
 app.include_router(comment.router, tags=["Comment"])
 app.include_router(posts.router, prefix="/posts", tags=["Posts"])

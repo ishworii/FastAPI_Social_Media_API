@@ -11,8 +11,8 @@ WORKDIR /fastapi_server
 # Copy poetry files
 COPY pyproject.toml poetry.lock ./
 
-# Install dependencies
-RUN poetry install --no-dev
+# Install dependencies (only production dependencies)
+RUN poetry install --only main --no-root
 
 # Copy application code
 COPY /app ./app
